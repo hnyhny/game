@@ -2,6 +2,7 @@ Class = require "class"
 local images = require "images"
 local screen = require "screen"
 local settings = require "settings"
+local keyboard = require "keyboard"
 Character = Class {}
 
 function Character:init()
@@ -20,7 +21,7 @@ end
 
 function Character:update(dt)
   self.dy = self.dy + settings.Gravity * dt
-  if love.keyboard.wasPressed("space") then
+  if love.keyboard.isDown(keyboard.Bindings.Jump) then
     self.dy = -settings.Character.Jump
   end
   self.y = self.y + self.dy
@@ -28,11 +29,11 @@ function Character:update(dt)
     self.y = screen.Virtual.Height - self.height - 16
   end
 
-  if love.keyboard.isDown("right") then
+  if love.keyboard.isDown(keyboard.Bindings.Right) then
     self.x = self.x + settings.Character.Movement
   end
 
-  if love.keyboard.isDown("left") then
+  if love.keyboard.isDown(keyboard.Bindings.Left) then
     self.x = self.x - settings.Character.Movement
   end
 

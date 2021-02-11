@@ -28,10 +28,6 @@ function love.keypressed(key)
   end
 end
 
-function love.keyboard.wasPressed(key)
-  return love.keyboard.keysPressed[key]
-end
-
 function love.draw()
   background:render()
   character:render()
