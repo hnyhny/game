@@ -1,29 +1,29 @@
-push = require 'push'
-Class = require 'class'
-require 'Character'
+local enviroment = require "enviroment"
 
-local images = require 'images'
-local settings = require 'settings'
-local background = images.background
+require "character"
+require "background"
+
+local background = Background()
 local character = Character()
 
 function love.update(dt) -- deltaTime
   character:update(dt)
-end
-
-function love.load()
-  settings.initialize()
   love.keyboard.keysPressed = {}
 end
 
-function love.resize(w,h)
-  push:resize(w,h)
+function love.load()
+  enviroment.initialize()
+  love.keyboard.keysPressed = {}
+end
+
+function love.resize(w, h)
+  enviroment.window.resizeTo(w, h)
 end
 
 function love.keypressed(key)
   love.keyboard.keysPressed[key] = true
 
-  if key == 'escape' then
+  if key == "escape" then
     love.event.quit()
   end
 end
@@ -33,9 +33,6 @@ function love.keyboard.wasPressed(key)
 end
 
 function love.draw()
-  love.graphics.draw(background, 0, 0)
+  background:render()
   character:render()
-  love.keyboard.keysPressed = {}
-  --push:finish()
 end
-

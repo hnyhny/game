@@ -1,39 +1,39 @@
-Character = Class{}
-local images = require 'images'
-local screen = require 'screen'
-local GRAVITY = 100
+Class = require "class"
+local images = require "images"
+local screen = require "screen"
+local settings = require "settings"
+Character = Class {}
 
 function Character:init()
-    self.image = images.character
-    self.width = self.image:getWidth()
-    self.height = self.image:getHeight()
+  self.width = images.character:getWidth()
+  self.height = images.character:getHeight()
 
-    self.x = (screen.Virtual.Width / 2) - (self.width / 2)
-    self.y = screen.Virtual.Height
+  self.x = (screen.Virtual.Width / 2) - (self.width / 2)
+  self.y = screen.Virtual.Height
 
-    self.dy = 0
+  self.dy = 0
 end
 
 function Character:render()
-    love.graphics.draw(self.image, self.x, self.y)
+  love.graphics.draw(images.character, self.x, self.y)
 end
 
 function Character:update(dt)
-  self.dy = self.dy + GRAVITY * dt
-  if love.keyboard.wasPressed('space') then
-    self.dy = -25
+  self.dy = self.dy + settings.Gravity * dt
+  if love.keyboard.wasPressed("space") then
+    self.dy = -settings.Character.Jump
   end
   self.y = self.y + self.dy
   if self.y > screen.Virtual.Height - self.height - 16 then
     self.y = screen.Virtual.Height - self.height - 16
   end
 
-  if love.keyboard.isDown('right') then
-    self.x = self.x + 15
+  if love.keyboard.isDown("right") then
+    self.x = self.x + settings.Character.Movement
   end
 
-  if love.keyboard.isDown('left') then
-    self.x = self.x - 15
+  if love.keyboard.isDown("left") then
+    self.x = self.x - settings.Character.Movement
   end
 
   if self.x < 16 then

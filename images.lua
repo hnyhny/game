@@ -1,7 +1,12 @@
 local path = "resources/images/"
+
+local function newImageFrom(name)
+    return love.graphics.newImage(path .. name)
+end
+
 local images = {}
 
-images.background = love.graphics.newImage(path .. 'background.png')
-images.character = love.graphics.newImage(path .. 'char_stand.png')
+images.background = newImageFrom("background.png")
+images.character = newImageFrom("char_stand.png")
 
 return images

@@ -1,17 +1,8 @@
-local settings = {}
-
-local function SetGraphicConfig()
-    love.graphics.setDefaultFilter('nearest','nearest')
-end
-
-local function initializeWindow()
-    love.window.setTitle('Cooles Game')
-    push:setupScreenWithDefaults()
-end
-
-function settings.initialize()
-    initializeWindow()
-    SetGraphicConfig()
-end
-
+local settings = {
+    Gravity = 50,
+    Character = {
+        Jump = 20,
+        Movement = 15
+    }
+}
 return settings
