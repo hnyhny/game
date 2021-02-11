@@ -1,14 +1,15 @@
 Character = Class{}
-
+local images = require 'images'
+local screen = require 'screen'
 local GRAVITY = 100
 
 function Character:init()
-    self.image = love.graphics.newImage('char_stand.png')
+    self.image = images.character
     self.width = self.image:getWidth()
     self.height = self.image:getHeight()
 
-    self.x = (VIRTUAL_WIDTH / 2) - (self.width / 2)
-    self.y = VIRTUAL_HEIGHT
+    self.x = (screen.Virtual.Width / 2) - (self.width / 2)
+    self.y = screen.Virtual.Height
 
     self.dy = 0
 end
@@ -23,8 +24,8 @@ function Character:update(dt)
     self.dy = -25
   end
   self.y = self.y + self.dy
-  if self.y > VIRTUAL_HEIGHT - self.height - 16 then
-    self.y = VIRTUAL_HEIGHT - self.height - 16
+  if self.y > screen.Virtual.Height - self.height - 16 then
+    self.y = screen.Virtual.Height - self.height - 16
   end
 
   if love.keyboard.isDown('right') then
@@ -37,7 +38,7 @@ function Character:update(dt)
 
   if self.x < 16 then
     self.x = 16
-  elseif self.x > VIRTUAL_WIDTH - self.width - 16 then
-    self.x = VIRTUAL_WIDTH - self.width - 16
+  elseif self.x > screen.Virtual.Width - self.width - 16 then
+    self.x = screen.Virtual.Width - self.width - 16
   end
 end

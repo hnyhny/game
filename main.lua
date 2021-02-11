@@ -1,30 +1,18 @@
 push = require 'push'
-
 Class = require 'class'
-
 require 'Character'
 
-local background = love.graphics.newImage('background.png')
-
-WINDOW_HEIGHT = 900
-WINDOW_WIDTH = 500
-
-VIRTUAL_HEIGHT = 800
-VIRTUAL_WIDTH = 400
-
+local images = require 'images'
+local settings = require 'settings'
+local background = images.background
 local character = Character()
 
+function love.update(dt) -- deltaTime
+  character:update(dt)
+end
+
 function love.load()
-  love.graphics.setDefaultFilter('nearest','nearest')
-
-  love.window.setTitle('Cooles Game')
-
-  push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
-    vsync = true,
-    fullscreen = false,
-    resizable = true
-  })
-
+  settings.initialize()
   love.keyboard.keysPressed = {}
 end
 
@@ -44,15 +32,10 @@ function love.keyboard.wasPressed(key)
   return love.keyboard.keysPressed[key]
 end
 
-function love.update(dt) -- deltaTime
-  character:update(dt)
-end
-
 function love.draw()
-  --push:start()
-  --love.graphics.scale(1, 1)
   love.graphics.draw(background, 0, 0)
   character:render()
   love.keyboard.keysPressed = {}
   --push:finish()
 end
+
