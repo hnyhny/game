@@ -1,45 +1,76 @@
 Class = require "class"
 local images = require "images"
-local screen = require "screen"
 local settings = require "settings"
-local keyboard = require "keyboard"
+local userInput = require "userInput"
+
+local modelWidth = images.character:getWidth()
+local modelHeight = images.character:getHeight()
+
+local level = settings.Screen.Virtual
+
+local Level = {
+  Boarders = {
+  Left = 0.5 * modelWidth,
+  Right = level.Width - 1.5 * modelWidth,
+  Bottom = level.Height - 1.5 * modelHeight
+  },
+  Start = {
+    X = (level.Width -modelWidth) / 2,
+    Y = level.Height
+  }
+}
+
 Character = Class {}
-
 function Character:init()
-  self.width = images.character:getWidth()
-  self.height = images.character:getHeight()
-
-  self.x = (screen.Virtual.Width / 2) - (self.width / 2)
-  self.y = screen.Virtual.Height
-
-  self.dy = 0
+  self.x = Level.Start.X
+  self.y = Level.Start.Y
+  self.yVelocity = 0
 end
 
 function Character:render()
   love.graphics.draw(images.character, self.x, self.y)
 end
 
-function Character:update(dt)
-  self.dy = self.dy + settings.Gravity * dt
-  if love.keyboard.isDown(keyboard.Bindings.Jump) then
-    self.dy = -settings.Character.Jump
+
+local function updateYVelocity(yVelocity, deltaTime)
+  if userInput.isJump() then
+    return -settings.Character.Jump
+  else
+    return yVelocity + settings.Gravity * deltaTime
   end
-  self.y = self.y + self.dy
-  if self.y > screen.Virtual.Height - self.height - 16 then
-    self.y = screen.Virtual.Height - self.height - 16
+end
+
+local function moveY(y, yVelocity)
+  local newY = y + yVelocity
+  
+  if newY > Level.Boarders.Bottom then
+    return Level.Boarders.Bottom
+  else
+    return newY
+  end
+end
+
+
+local function moveX(x)
+  local newX = x
+  if userInput.isMoveRight() then
+    newX = newX + settings.Character.Movement
+  elseif userInput.isMoveLeft() then
+    newX = newX - settings.Character.Movement
+  end
+  if newX < Level.Boarders.Left then
+    return Level.Boarders.Left
+  end
+  
+  if newX > Level.Boarders.Right then
+    return Level.Boarders.Right
   end
 
-  if love.keyboard.isDown(keyboard.Bindings.Right) then
-    self.x = self.x + settings.Character.Movement
-  end
+  return newX
+end
 
-  if love.keyboard.isDown(keyboard.Bindings.Left) then
-    self.x = self.x - settings.Character.Movement
-  end
-
-  if self.x < 16 then
-    self.x = 16
-  elseif self.x > screen.Virtual.Width - self.width - 16 then
-    self.x = screen.Virtual.Width - self.width - 16
-  end
+function Character:update(deltaTime)
+  self.yVelocity = updateYVelocity(self.yVelocity, deltaTime)
+  self.y = moveY(self.y, self.yVelocity)
+  self.x = moveX(self.x)
 end

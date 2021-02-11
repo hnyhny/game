@@ -1,6 +1,6 @@
 local push = require "push"
 
-local settings = {}
+local enviroment = {}
 
 local function SetGraphicConfig()
     love.graphics.setDefaultFilter("nearest", "nearest")
@@ -11,14 +11,8 @@ local function initializeWindow()
     push:setupScreenWithDefaults()
 end
 
-function settings.initialize()
+function enviroment.initialize()
     initializeWindow()
     SetGraphicConfig()
 end
-settings.window = {}
-
-function settings.window:resizeTo(width, height)
-    push:resize(width, height)
-end
-
-return settings
+return enviroment

@@ -1,7 +1,7 @@
 local enviroment = require "enviroment"
-
 require "character"
 require "background"
+local push = require "push"
 
 local background = Background()
 local character = Character()
@@ -17,7 +17,7 @@ function love.load()
 end
 
 function love.resize(w, h)
-  enviroment.window.resizeTo(w, h)
+  push:resize(w, h)
 end
 
 function love.keypressed(key)

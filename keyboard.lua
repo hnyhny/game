@@ -9,5 +9,5 @@ local Bindings = {
     Right = Keys.RIGHT
 }
 
-local keyboard =  {Keys = Keys, Bindings = Bindings, KeyPressed = {}, KeyDown = {}}
+local keyboard =  {Keys = Keys, Bindings = Bindings}
 return keyboard
