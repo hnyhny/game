@@ -1,7 +1,7 @@
 local settings = {
-    Gravity = 50,
+    Gravity = 100,
     Character = {
-        Jump = 20,
+        Jump = 25,
         Movement = 15
     }
 }
