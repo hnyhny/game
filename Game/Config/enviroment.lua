@@ -1,5 +1,5 @@
 local push = require "Libraries.push"
-local settings = require "settings"
+local settings = require "Config.settings"
 local enviroment = {}
 
 local function setGraphicConfig()
