@@ -2,7 +2,7 @@ local push = require "Application.push"
 
 local enviroment = {}
 
-local function SetGraphicConfig()
+local function setGraphicConfig()
     love.graphics.setDefaultFilter("nearest", "nearest")
 end
 
@@ -13,6 +13,7 @@ end
 
 function enviroment.initialize()
     initializeWindow()
-    SetGraphicConfig()
+    setGraphicConfig()
 end
+
 return enviroment
