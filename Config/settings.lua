@@ -13,12 +13,12 @@ local settings = {
     },
     Screen = {
         Window = {
-            Height = 800,
-            Width = 400
+            Height = 512,
+            Width = 256
         },
         Virtual = {
-            Height = 800,
-            Width = 400
+            Height = 512,
+            Width = 256
         },
         Settings = {
             vsync = true,
