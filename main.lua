@@ -20,7 +20,7 @@ function love.resize(w, h)
 end
 
 function love.keypressed(key)
-  if userInput.IsExit() then
+  if userInput.isExit() then
     love.event.quit()
   end
 end

@@ -6,6 +6,7 @@ local isDown = love.keyboard.isDown
 function userInput.isJump()
     return isDown(settings.Bindings.Jump)
 end
+
 function userInput.isMoveRight()
     return isDown(settings.Bindings.Right)
 end
@@ -14,7 +15,7 @@ function userInput.isMoveLeft()
     return isDown(settings.Bindings.Left)
 end
 
-function userInput.IsExit()
+function userInput.isExit()
     return isDown(settings.Bindings.Exit)
 end
 
