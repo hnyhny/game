@@ -1,6 +1,6 @@
-Class = require "Application.class"
+Class = require "Libraries.class"
 local images = require "Resources.images"
-local settings = require "settings"
+local settings = require "Config.settings"
 local userInput = require "Input.userInput"
 
 local modelWidth = images.character:getWidth()

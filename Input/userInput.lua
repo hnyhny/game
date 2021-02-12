@@ -1,4 +1,4 @@
-local settings = require "settings"
+local settings = require "Config.settings"
 
 local userInput = {}
 local isDown = love.keyboard.isDown

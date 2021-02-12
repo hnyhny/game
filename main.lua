@@ -1,7 +1,7 @@
-local enviroment = require "Application.enviroment"
+local enviroment = require "Config.enviroment"
 require "GameObjects.character"
 require "GameObjects.background"
-local push = require "Application.push"
+local push = require "Libraries.push"
 local userInput = require "Input.userInput"
 
 local background = Background()
