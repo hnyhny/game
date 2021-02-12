@@ -4,5 +4,8 @@
         "love",
         "class_commons",
         "unpack"
+    ],
+    "Lua.diagnostics.disable": [
+        "lowercase-global"
     ]
 }
