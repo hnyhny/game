@@ -7,7 +7,7 @@ local function setGraphicConfig()
 end
 
 local function initializeWindow()
-    love.window.setTitle("Cooles Game")
+    love.window.setTitle("the floor becomes lava")
     push:setupScreenWithDefaults()
 end
 
