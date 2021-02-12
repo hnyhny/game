@@ -1,11 +1,12 @@
+local keys = require "Input.keys"
 local settings = {
     Game = {
-    Gravity = 100,
-    Character = {
-        Jump = 25,
-        Movement = 15
-    }
-},
+        Gravity = 100,
+        Character = {
+            Jump = 25,
+            Movement = 15
+        }
+    },
     Screen = {
         Window = {
             Height = 900,
@@ -20,6 +21,12 @@ local settings = {
             fullscreen = false,
             resizable = true
         }
+    },
+    Bindings = {
+        Jump = keys.SPACE,
+        Left = keys.LEFT,
+        Right = keys.RIGHT,
+        Exit = keys.ESCAPE
     }
 }
 return settings
