@@ -10,8 +10,8 @@ local settings = {
     },
     Screen = {
         Window = {
-            Height = 900,
-            Width = 500
+            Height = 800,
+            Width = 400
         },
         Virtual = {
             Height = 800,
