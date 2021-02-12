@@ -1,4 +1,5 @@
 local keys = require "Input.keys"
+
 local settings = {
     Game = {
         Gravity = 100,
@@ -29,4 +30,5 @@ local settings = {
         Exit = keys.ESCAPE
     }
 }
+
 return settings
