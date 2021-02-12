@@ -1,6 +1,9 @@
 local keys = require "Input.keys"
 
 local settings = {
+    GameInfo = {
+        Name = "the floor becomes lava"
+    },
     Game = {
         Gravity = 100,
         Character = {

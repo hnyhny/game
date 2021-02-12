@@ -1,5 +1,5 @@
 local push = require "Libraries.push"
-
+local settings = require "settings"
 local enviroment = {}
 
 local function setGraphicConfig()
@@ -7,7 +7,7 @@ local function setGraphicConfig()
 end
 
 local function initializeWindow()
-    love.window.setTitle("the floor becomes lava")
+    love.window.setTitle(settings.GameInfo.Name)
     push:setupScreenWithDefaults()
 end
 
