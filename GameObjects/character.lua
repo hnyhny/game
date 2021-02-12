@@ -32,14 +32,13 @@ function Character:render()
   love.graphics.draw(images.character, self.x, self.y)
 end
 
-local Jumped = {
-  Once = false,
-}
+local JumpedOnce = false
+
 
 local function updateYVelocity(yVelocity, deltaTime)
-  if userInput.isJump() and not Jumped.Once then
-    Jumped.Once = true
-    return -characterConfig.Jump.First
+  if userInput.isJump() and not JumpedOnce then
+    JumpedOnce = true
+    return -characterConfig.Jump
  
   else
     return yVelocity + settings.Game.Gravity * deltaTime
@@ -50,7 +49,7 @@ local function moveY(y, yVelocity)
   local newY = y + yVelocity
 
   if newY > Level.Boarders.Bottom then
-    Jumped.Once = false
+    JumpedOnce = false
     return Level.Boarders.Bottom
   else
     return newY
