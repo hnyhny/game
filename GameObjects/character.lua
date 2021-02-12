@@ -1,13 +1,13 @@
-Class = require "class"
-local images = require "images"
+Class = require "Application.class"
+local images = require "Resources.images"
 local settings = require "settings"
-local userInput = require "userInput"
+local userInput = require "Input.userInput"
 
 local modelWidth = images.character:getWidth()
 local modelHeight = images.character:getHeight()
 
 local level = settings.Screen.Virtual
-
+local gameConfig = settings.Game
 local Level = {
   Boarders = {
   Left = 0.5 * modelWidth,
@@ -34,9 +34,9 @@ end
 
 local function updateYVelocity(yVelocity, deltaTime)
   if userInput.isJump() then
-    return -settings.Character.Jump
+    return -gameConfig.Character.Jump
   else
-    return yVelocity + settings.Gravity * deltaTime
+    return yVelocity + gameConfig.Gravity * deltaTime
   end
 end
 
@@ -54,9 +54,9 @@ end
 local function moveX(x)
   local newX = x
   if userInput.isMoveRight() then
-    newX = newX + settings.Character.Movement
+    newX = newX + gameConfig.Character.Movement
   elseif userInput.isMoveLeft() then
-    newX = newX - settings.Character.Movement
+    newX = newX - gameConfig.Character.Movement
   end
   if newX < Level.Boarders.Left then
     return Level.Boarders.Left

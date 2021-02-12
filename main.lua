@@ -1,19 +1,18 @@
-local enviroment = require "enviroment"
-require "character"
-require "background"
-local push = require "push"
+local enviroment = require "Application.enviroment"
+require "GameObjects.character"
+require "GameObjects.background"
+local push = require "Application.push"
+local userInput = require "Input.userInput"
 
 local background = Background()
 local character = Character()
 
 function love.update(dt) -- deltaTime
   character:update(dt)
-  love.keyboard.keysPressed = {}
 end
 
 function love.load()
   enviroment.initialize()
-  love.keyboard.keysPressed = {}
 end
 
 function love.resize(w, h)
@@ -21,9 +20,7 @@ function love.resize(w, h)
 end
 
 function love.keypressed(key)
-  love.keyboard.keysPressed[key] = true
-
-  if key == "escape" then
+  if userInput.IsExit() then
     love.event.quit()
   end
 end

@@ -1,5 +1,5 @@
-Class = require "class"
-local images = require "images"
+Class = require "Application.class"
+local images = require "Resources.images"
 
 Background = Class {}
 
