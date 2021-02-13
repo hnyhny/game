@@ -2,12 +2,16 @@ Class = require "Libraries.class"
 local settings = require "Config.settings"
 local userInput = require "Input.userInput"
 local gravity = require "Physics.gravity"
-local animationFuncs = require "GameObjects.characterAnimation"
+local animations = require "Rendering.animations"
+local image = require "Rendering.image"
 local images = require "Resources.images"
 
 local width = images.Character.Standing:getDimensions()
 local animationDuration = 1 / settings.Game.AnimationSpeed
-local animation = animationFuncs.newAnimation(images.Character.Running, width, animationDuration)
+local texture = {
+   Running = animations.newAnimation(images.Character.Running, width, animationDuration),
+   Standing = image.newImage(images.Character.Standing)
+  }
 
 local levelSize = settings.Game.LevelSize
 
@@ -34,15 +38,14 @@ function Character:init()
 end
 
 function Character:render()
-  local spriteNum = math.floor(animation.currentTime / animation.duration * #animation.quads)
 
   local isRunningRight = self.Velocity.X > 0
   local isRunningLeft = self.Velocity.X < 0
 
   if isRunningRight then
-    animation:draw(spriteNum, self.Position)
+    texture.Running:draw(self.Position)
   elseif isRunningLeft then
-    animation:draw(spriteNum, self.Position, 0, -1, 1, animation.width)
+    texture.Running:draw(self.Position, 0, -1, 1, texture.Running.width)
   else
     love.graphics.draw(images.Character.Standing, self.Position.X, self.Position.Y, 0)
   end
@@ -90,6 +93,7 @@ local function moveX(x, xVelocity)
 
   return newX
 end
+
 function Character:update(dt)
   self.Velocity.Y = gravity.apply(self.Velocity.Y, dt)
   self.Velocity.Y = updateYVelocityFromInput(self.Velocity.Y)
@@ -97,9 +101,5 @@ function Character:update(dt)
 
   self.Velocity.X = updateXVelocity()
   self.Position.X = moveX(self.Position.X, self.Velocity.X)
-
-  animation.currentTime = animation.currentTime + dt
-  if animation.currentTime >= animation.duration then
-    animation.currentTime = animation.currentTime - animation.duration
-  end
+  texture.Running:UpdateCurrentTime(dt)
 end
