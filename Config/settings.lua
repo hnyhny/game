@@ -5,16 +5,17 @@ local gameInfo = {
 }
 
 local game = {
-    Gravity = 100,
+    Gravity = 70,
     Character = {
         Jump = 10,
-        Movement = 5
+        Movement = 2
     },
     LevelSize = {
         Height = 512,
         Width = 256,
-        Scale = 2
-    }
+        Scale = 2.5
+    },
+    AnimationSpeed = 15
 }
 
 local screen = {
