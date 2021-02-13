@@ -4,9 +4,12 @@ local function newImage(name)
     return love.graphics.newImage(path .. name)
 end
 
-local images = {}
-
-images.background = newImage("background.png")
-images.character = newImage("char_stand.png")
+local images = {
+    Background = newImage("background.png"),
+    Character = {
+        Running = newImage("char_run.png"),
+        Standing = newImage("char_stand.png")
+    }
+}
 
 return images
