@@ -2,7 +2,7 @@ Class = require "Libraries.class"
 local settings = require "Config.settings"
 local userInput = require "Input.userInput"
 local gravity = require "Physics.gravity"
-local animationFuncs = require "GameObjects.characterAnimation"
+local animationFuncs = require "GameObjects.animation"
 local images = require "Resources.images"
 
 local width = images.Character.Standing:getDimensions()

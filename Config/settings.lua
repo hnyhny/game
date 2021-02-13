@@ -15,7 +15,7 @@ local game = {
         Width = 256,
         Scale = 2
     },
-    AnimationSpeed = 20
+    AnimationSpeed = 15
 }
 
 local screen = {
