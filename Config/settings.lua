@@ -13,9 +13,9 @@ local game = {
     LevelSize = {
         Height = 512,
         Width = 256,
-        Scale = 2.5
+        Scale = 2
     },
-    AnimationSpeed = 15
+    AnimationSpeed = 20
 }
 
 local screen = {

@@ -1,15 +1,20 @@
 Class = require "Libraries.class"
-local images = require "Resources.images"
 local settings = require "Config.settings"
 local userInput = require "Input.userInput"
+local gravity = require "Physics.gravity"
+local animationFuncs = require "GameObjects.characterAnimation"
+local images = require "Resources.images"
 
-local width, height = images.Character.Standing:getDimensions()
+local width = images.Character.Standing:getDimensions()
+local animationDuration = 1 / settings.Game.AnimationSpeed
+local animation = animationFuncs.newAnimation(images.Character.Running, width, animationDuration)
+
 local levelSize = settings.Game.LevelSize
 
 local Borders = {
   Left = 0.5 * width,
   Right = levelSize.Width - 1.5 * width,
-  Bottom = levelSize.Height - 1.5 * height
+  Bottom = levelSize.Height - 1.5 * width
 }
 local Start = {
   X = (levelSize.Width - width) / 2,
@@ -18,32 +23,39 @@ local Start = {
 
 Character = Class {}
 function Character:init()
-  self.x = Start.X
-  self.y = Start.Y
-  self.yVelocity = 0
-  self.xVelocity = 0
+  self.Position = {
+    X = Start.X,
+    Y = Start.Y
+  }
+  self.Velocity = {
+    X = 0,
+    Y = 0
+  }
 end
 
-local imageRun = love.graphics.newQuad(0, 0, width, height, images.Character.Running)
 function Character:render()
-  if self.xVelocity > 0 then
-    love.graphics.draw(images.Character.Running, imageRun, self.x, self.y, 0)
-  elseif self.xVelocity < 0 then
-    love.graphics.draw(images.Character.Running, imageRun, self.x + width, self.y, 0, -1, 1)
+  local spriteNum = math.floor(animation.currentTime / animation.duration * #animation.quads)
+
+  local isRunningRight = self.Velocity.X > 0
+  local isRunningLeft = self.Velocity.X < 0
+
+  if isRunningRight then
+    animation:draw(spriteNum, self.Position)
+  elseif isRunningLeft then
+    animation:draw(spriteNum, self.Position, 0, -1, 1, animation.width)
   else
-    love.graphics.draw(images.Character.Standing, self.x, self.y, 0)
+    love.graphics.draw(images.Character.Standing, self.Position.X, self.Position.Y, 0)
   end
 end
 
 local jumpedOnce = false
 local characterConfig = settings.Game.Character
-local function updateYVelocity(yVelocity, deltaTime)
+local function updateYVelocityFromInput(yVelocity)
   if userInput.isJump() and not jumpedOnce then
     jumpedOnce = true
     return -characterConfig.Jump
-  else
-    return yVelocity + settings.Game.Gravity * deltaTime
   end
+  return yVelocity
 end
 
 local function moveY(y, yVelocity)
@@ -78,28 +90,16 @@ local function moveX(x, xVelocity)
 
   return newX
 end
-local function SetAnimation(animationIndex)
-  imageRun = love.graphics.newQuad(animationIndex * width, 0, width, width, images.Character.Running)
-end
+function Character:update(dt)
+  self.Velocity.Y = gravity.apply(self.Velocity.Y, dt)
+  self.Velocity.Y = updateYVelocityFromInput(self.Velocity.Y)
+  self.Position.Y = moveY(self.Position.Y, self.Velocity.Y)
 
-local counter = 0
-local runningAnimationsCount = images.Character.Running:getWidth() / width
+  self.Velocity.X = updateXVelocity()
+  self.Position.X = moveX(self.Position.X, self.Velocity.X)
 
-local function UpdateAnimation()
-  local factor = settings.Game.AnimationSpeed
-  local animation = math.floor(counter / factor)
-  if animation >= runningAnimationsCount then
-    animation = 0
-    counter = 0
+  animation.currentTime = animation.currentTime + dt
+  if animation.currentTime >= animation.duration then
+    animation.currentTime = animation.currentTime - animation.duration
   end
-  SetAnimation(animation)
-  counter = counter + 1
-end
-
-function Character:update(deltaTime)
-  self.yVelocity = updateYVelocity(self.yVelocity, deltaTime)
-  self.y = moveY(self.y, self.yVelocity)
-  self.xVelocity = updateXVelocity()
-  self.x = moveX(self.x, self.xVelocity)
-  UpdateAnimation()
 end
