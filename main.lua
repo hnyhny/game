@@ -27,7 +27,7 @@ end
 
 function love.draw()
   love.graphics.push()
-  love.graphics.scale(2, 2)
+  love.graphics.scale(settings.Game.LevelSize.Scale)
   background:render()
   character:render()
 love.graphics.pop()
