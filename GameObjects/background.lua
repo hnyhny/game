@@ -4,5 +4,5 @@ local images = require "Resources.images"
 Background = Class {}
 
 function Background:render()
-    love.graphics.draw(images.background, 0, 0)
+    love.graphics.draw(images.Background, 0, 0)
 end
