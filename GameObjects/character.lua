@@ -16,8 +16,8 @@ local texture = {
 local levelSize = settings.Game.LevelSize
 
 local Borders = {
-  Left = 0.5 * width,
-  Right = levelSize.Width - 1.5 * width,
+  Left = 0.2 * width,
+  Right = levelSize.Width - 1.2 * width,
   Bottom = levelSize.Height - 1.5 * width
 }
 local Start = {
