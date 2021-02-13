@@ -1,6 +1,6 @@
-local animation = {}
+local animations = {}
 
-function animation.newAnimation(image, width, duration)
+function animations.newAnimation(image, width, duration)
     local animation = {}
     animation.spriteSheet = image
     animation.quads = {}
@@ -13,10 +13,19 @@ function animation.newAnimation(image, width, duration)
     animation.duration = duration or 1
     animation.currentTime = 0
 
-    function animation:draw(spriteNum, position, r, sx, sy, ox, oy)
+
+    function animation:UpdateCurrentTime(dt)
+        self.currentTime = self.currentTime + dt
+        if self.currentTime >= self.duration then
+          self.currentTime = self.currentTime - self.duration
+      end
+    end
+
+    function animation:draw(position, r, sx, sy, ox, oy)
+       local spriteNum = math.floor(self.currentTime / self.duration * #self.quads)
         love.graphics.draw(self.spriteSheet, self.quads[spriteNum], position.X, position.Y, r, sx, sy, ox, oy)
     end
     return animation
 end
 
-return animation
+return animations
