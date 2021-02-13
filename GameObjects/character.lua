@@ -6,26 +6,27 @@ local userInput = require "Input.userInput"
 local modelWidth = images.character:getWidth()
 local modelHeight = images.character:getHeight()
 
-local level = settings.Screen.Virtual
+local levelSize = settings.Game.LevelSize
 local characterConfig = settings.Game.Character
 
-local Level = {
-  Borders = {
+local  Borders = {
     Left = 0.5 * modelWidth,
-    Right = level.Width - 1.5 * modelWidth,
-    Bottom = level.Height - 1.5 * modelHeight
-  },
-  Start = {
-    X = (level.Width - modelWidth) / 2,
-    Y = level.Height
+    Right = levelSize.Width - 1.5 * modelWidth,
+    Bottom = levelSize.Height - 1.5 * modelHeight
   }
-}
+  local  Start = {
+    X = (levelSize.Width - modelWidth) / 2,
+    Y = levelSize.Height
+  }
+
 
 Character = Class {}
 function Character:init()
-  self.x = Level.Start.X
-  self.y = Level.Start.Y
+  self.x = Start.X
+  self.y = Start.Y
   self.yVelocity = 0
+  self.xVelocity = 0
+  self.inAir = false;
 end
 
 function Character:render()
@@ -43,12 +44,12 @@ local function updateYVelocity(yVelocity, deltaTime)
   end
 end
 
-local function moveY(y, yVelocity)
+ local function moveY(y, yVelocity)
   local newY = y + yVelocity
 
-  if newY > Level.Borders.Bottom then
+  if newY  > Borders.Bottom then
     jumpedOnce = false
-    return Level.Borders.Bottom
+    return Borders.Bottom
   else
     return newY
   end
@@ -63,12 +64,12 @@ local function moveX(x)
     newX = newX - characterConfig.Movement
   end
 
-  if newX < Level.Borders.Left then
-    return Level.Borders.Left
+  if newX < Borders.Left then
+    return Borders.Left
   end
 
-  if newX > Level.Borders.Right then
-    return Level.Borders.Right
+  if newX > Borders.Right then
+    return Borders.Right
   end
 
   return newX

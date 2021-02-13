@@ -3,7 +3,7 @@ require "GameObjects.character"
 require "GameObjects.background"
 local push = require "Libraries.push"
 local userInput = require "Input.userInput"
-
+local settings = require "Config.settings"
 local background = Background()
 local character = Character()
 
@@ -26,6 +26,9 @@ function love.keypressed(key)
 end
 
 function love.draw()
+  love.graphics.push()
+  love.graphics.scale(2, 2)
   background:render()
   character:render()
+love.graphics.pop()
 end
