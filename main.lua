@@ -34,7 +34,7 @@ function love.draw()
   love.graphics.push()
   love.graphics.scale(settings.Game.LevelSize.Scale)
   background:render()
-  character:render()
   platform:render()
+  character:render()
 love.graphics.pop()
 end
