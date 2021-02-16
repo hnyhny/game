@@ -1,4 +1,3 @@
-local push = require "Libraries.push"
 local settings = require "Config.settings"
 local enviroment = {}
 
@@ -8,7 +7,7 @@ end
 
 local function initializeWindow()
     love.window.setTitle(settings.GameInfo.Name)
-    push:setupScreenWithDefaults()
+    love.window.setMode(settings.Screen.Window.Width, settings.Screen.Window.Height)
 end
 
 function enviroment.initialize()

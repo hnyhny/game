@@ -2,7 +2,6 @@ local enviroment = require "Config.enviroment"
 require "GameObjects.character"
 require "GameObjects.background"
 require "GameObjects.platform"
-local push = require "Libraries.push"
 local userInput = require "Input.userInput"
 local settings = require "Config.settings"
 local background = Background()
@@ -18,10 +17,6 @@ end
 
 function love.load()
   enviroment.initialize()
-end
-
-function love.resize(w, h)
-  push:resize(w, h)
 end
 
 function love.keypressed(key)
