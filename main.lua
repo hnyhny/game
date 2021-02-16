@@ -2,12 +2,14 @@ local enviroment = require "Config.enviroment"
 require "GameObjects.character"
 require "GameObjects.background"
 require "GameObjects.platform"
+require "GameObjects.lava"
 
 local wf = require "Libraries.windfield"
 local userInput = require "Input.userInput"
 local settings = require "Config.settings"
 local background = Background()
 local character = Character()
+local lavaImage = Lava()
 local level = settings.Game.LevelSize
 
 local function CreatePlatform(x, y, amount, collisionClass)
@@ -61,7 +63,6 @@ function love.load()
 
   world:addCollisionClass("lava", {ignores = {"wall", "top", "plat_ceiling", "plat_wall", "floor"}})
 
-
   ground:setType("static")
   wall_left:setType("static")
   wall_right:setType("static")
@@ -88,8 +89,19 @@ function love.load()
     CreatePlatform(120, level.Height - 660, 2),
     CreatePlatform(50, level.Height - 730, 3),
     CreatePlatform(70, level.Height - 800, 4),
-    CreatePlatform(10, level.Height - 870, 2),
-    CreatePlatform(100, level.Height - 940, 4, "win")
+    CreatePlatform(10, level.Height - 870, 2),    
+    CreatePlatform(20, level.Height - 940, 1),
+    CreatePlatform(80, level.Height - 1010, 2),
+    CreatePlatform(180, level.Height - 1080, 2),
+    CreatePlatform(180, level.Height - 1150, 1),
+    CreatePlatform(0, level.Height - 1220, 4),
+    CreatePlatform(150, level.Height - 1290, 1),
+    CreatePlatform(0, level.Height - 1360, 3),
+    CreatePlatform(120, level.Height - 1430, 2),
+    CreatePlatform(50, level.Height - 1500, 3),
+    CreatePlatform(70, level.Height - 1570, 4),
+    CreatePlatform(10, level.Height - 1640, 2),
+    CreatePlatform(100, level.Height - 1710, 4, "win")
   }
 end
 
@@ -97,15 +109,15 @@ local jumpedOnce = false
 local isInAir = false
 local won = false
 local dead = false
-
+local movement = 0
 function love.update(dt)
   if jumpedOnce and not won and not dead then
-    local movement = -70 * dt
+    movement = -85 * dt
     world:translateOrigin(0, movement)
     wall_left:setY(wall_left:getY() + movement)
     wall_right:setY(wall_right:getY() + movement)
     ground:setY(ground:getY() + movement)
-    lava:setY(lava:getY() + 1.5 * movement)
+    lava:setY(lava:getY() + 1.3 * movement)
   end
 
   if won or dead then
@@ -150,14 +162,23 @@ end
 function love.draw()
   love.graphics.push()
   love.graphics.scale(settings.Game.LevelSize.Scale)
+  character:render(playerBox:getPosition())  
+
+  for index, value in ipairs(gamePlatforms) do
+    if not won and not dead then
+      value.y = value.y - movement
+    end
+    value:render()
+  end
+  lavaImage:render(0, lava:getY())
   background:render()
-  character:render(playerBox:getPosition())
-  world:draw()
+
+  -- world:draw()
   if won then
     love.graphics.print(
       "YOU WON",
       settings.Game.LevelSize.Width / 2 - 100,
-      settings.Game.LevelSize.Height / 2 - 30,
+      settings.Game.LevelSize.Height / 2 - 50,
       0,
       3,
       3
