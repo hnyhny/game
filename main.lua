@@ -54,8 +54,6 @@ function love.load()
 
   world:addCollisionClass("plat_wall")
   world:addCollisionClass("floor")
-  world:addCollisionClass("ground")
-
   world:addCollisionClass("plat_ceiling")
   world:addCollisionClass("win")
   world:addCollisionClass("wall")
@@ -69,7 +67,7 @@ function love.load()
   wall_right:setType("static")
   lava:setType("static")
 
-  ground:setCollisionClass("ground")
+  ground:setCollisionClass("floor")
   wall_left:setCollisionClass("wall")
   wall_right:setCollisionClass("wall")
 
@@ -139,16 +137,6 @@ function love.update(dt)
     playerBox:setLinearVelocity(x, 0)
     isInAir = false
   end
-
-  if playerBox:enter("ground") then
-    local x, y = playerBox:getLinearVelocity()
-    playerBox:setLinearVelocity(x, 0)
-    isInAir = false
-    if playerBox:enter("plat_ceiling") then
-      dead = true
-    end
-  end
-
 
   if playerBox:enter("win") then
     won = true
