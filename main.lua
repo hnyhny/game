@@ -58,6 +58,7 @@ function love.load()
   world:addCollisionClass("floor")
   world:addCollisionClass("plat_ceiling")
   world:addCollisionClass("win")
+
   world:addCollisionClass("wall")
   world:addCollisionClass("top")
 
@@ -89,7 +90,7 @@ function love.load()
     CreatePlatform(120, level.Height - 660, 2),
     CreatePlatform(50, level.Height - 730, 3),
     CreatePlatform(70, level.Height - 800, 4),
-    CreatePlatform(10, level.Height - 870, 2),    
+    CreatePlatform(10, level.Height - 870, 2),
     CreatePlatform(20, level.Height - 940, 1),
     CreatePlatform(80, level.Height - 1010, 2),
     CreatePlatform(180, level.Height - 1080, 2),
@@ -101,8 +102,18 @@ function love.load()
     CreatePlatform(50, level.Height - 1500, 3),
     CreatePlatform(70, level.Height - 1570, 4),
     CreatePlatform(10, level.Height - 1640, 2),
-    CreatePlatform(100, level.Height - 1710, 4, "win")
+    CreatePlatform(100, level.Height - 1710, 4)
   }
+end
+
+math.randomseed(os.time())
+local function CreateFivePlatforms(y)
+
+  table.insert(gamePlatforms, CreatePlatform(math.random(0, 220), y - 70, math.random(1,4)))
+  table.insert(gamePlatforms, CreatePlatform(math.random(0, 220), y - 140, math.random(1,4)))
+  table.insert(gamePlatforms, CreatePlatform(math.random(0, 220), y - 210, math.random(1,4)))
+  table.insert(gamePlatforms, CreatePlatform(math.random(0, 220), y - 280, math.random(1,4)))
+  table.insert(gamePlatforms, CreatePlatform(math.random(0, 220), y - 350, math.random(1,4)))
 end
 
 local jumpedOnce = false
@@ -157,12 +168,16 @@ function love.update(dt)
   if playerBox:enter("lava") then
     dead = true
   end
+  if (playerBox:getY() - gamePlatforms[#gamePlatforms].y <= 280) then
+    CreateFivePlatforms(gamePlatforms[#gamePlatforms].y)
+  end
   world:update(dt)
 end
+
 function love.draw()
   love.graphics.push()
   love.graphics.scale(settings.Game.LevelSize.Scale)
-  character:render(playerBox:getPosition())  
+  character:render(playerBox:getPosition())
 
   for index, value in ipairs(gamePlatforms) do
     if not won and not dead then
@@ -170,7 +185,7 @@ function love.draw()
     end
     value:render()
   end
-  lavaImage:render(0, lava:getY())
+  lavaImage:render(0, lava:getY() - 5)
   background:render()
 
   -- world:draw()
@@ -186,13 +201,25 @@ function love.draw()
   end
   if dead then
     love.graphics.print(
-      "GAME OVER",
+      "GAME OVER:",
       settings.Game.LevelSize.Width / 2 - 100,
       settings.Game.LevelSize.Height / 2 - 30,
       0,
-      3,
-      3
+      2,
+      2
     )
+    for index, value in ipairs(gamePlatforms) do
+      if math.abs(lava:getY() - value.y) <= 70 then
+        love.graphics.print(
+          index .. " Pts",
+          settings.Game.LevelSize.Width / 2 - 100,
+          settings.Game.LevelSize.Height / 2 + 10,
+          0,
+          2,
+          2
+        )
+      end
+    end
   end
   love.graphics.pop()
 end
