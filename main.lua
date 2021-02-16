@@ -43,9 +43,9 @@ function love.load()
   world = wf.newWorld(0, 0, true)
   world:setGravity(0, 2000)
 
-  box = world:newRectangleCollider((level.Width - 50) / 2, level.Height - 16, 16, 16)
-  box:setRestitution(0.8)
-  box:setFixedRotation(true)
+  playerBox = world:newRectangleCollider((level.Width - 50) / 2, level.Height - 16, 16, 16)
+  playerBox:setRestitution(0.8)
+  playerBox:setFixedRotation(true)
   top = world:newRectangleCollider(0, 0, level.Width, 8)
   ground = world:newRectangleCollider(0, level.Height - 8, level.Width, 8)
   wall_left = world:newRectangleCollider(0, 0, 8, level.Height)
@@ -86,35 +86,35 @@ local isInAir = false
 local won = false;
 function love.update(dt)
   if won then
-    box:setLinearVelocity(0,0)
+    playerBox:setLinearVelocity(0,0)
     return
   end
-  local x, y = box:getLinearVelocity()
+  local x, y = playerBox:getLinearVelocity()
 
   local speed = 200
   if userInput.isMoveLeft() then
-    box:setLinearVelocity(-speed, y)
+    playerBox:setLinearVelocity(-speed, y)
     character:update(dt, -speed, y)
   elseif userInput.isMoveRight() then
-    box:setLinearVelocity(speed, y)
+    playerBox:setLinearVelocity(speed, y)
     character:update(dt, speed, y)
   else
-    box:setLinearVelocity(0, y)
+    playerBox:setLinearVelocity(0, y)
     character:update(dt, 0, y)
   end
 
   if userInput.isJump() and not isInAir then
-    box:applyLinearImpulse(0, -300)
+    playerBox:applyLinearImpulse(0, -300)
     isInAir = true
   end
 
-  if box:enter("floor") then
-    local x, y = box:getLinearVelocity()
-    box:setLinearVelocity(x, 0)
+  if playerBox:enter("floor") then
+    local x, y = playerBox:getLinearVelocity()
+    playerBox:setLinearVelocity(x, 0)
     isInAir = false
   end
 
-  if box:enter("top") then
+  if playerBox:enter("top") then
     won = true
   end
  
@@ -124,8 +124,8 @@ function love.draw()
   love.graphics.push()
   love.graphics.scale(settings.Game.LevelSize.Scale)
   background:render()
-  character:render(box:getPosition())
-  -- world:draw()
+  character:render(playerBox:getPosition())
+  --world:draw()
   if won then
     love.graphics.print( "YOU WON", settings.Game.LevelSize.Width / 2 - 100, settings.Game.LevelSize.Height / 2 - 30, 0, 3, 3)
   end
