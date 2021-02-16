@@ -10,8 +10,9 @@ local background = Background()
 local character = Character()
 local level = settings.Game.LevelSize
 
-local function CreatePlatform(x, y, width)
+local function CreatePlatform(x, y, amount)
   local height = 4
+  local width = 32 * amount
   local platformTop = world:newRectangleCollider(x + 1, y, width - 1, height)
   platformTop:setType("static")
   platformTop:setCollisionClass("floor")
@@ -72,12 +73,12 @@ function love.load()
   wall_right:setFriction(0)
 
   gamePlatforms = {
-    CreatePlatform(level.Width - 130, level.Height - 85, 32),
-    CreatePlatform(20, level.Height - 165, 32),
-    CreatePlatform(80, level.Height - 240, 64),
-    CreatePlatform(180, level.Height - 320, 64),
-    CreatePlatform(180, level.Height - 400, 64),
-    CreatePlatform(0, level.Height - 480, 128)
+    CreatePlatform(level.Width - 130, level.Height - 85, 1),
+    CreatePlatform(20, level.Height - 165, 1),
+    CreatePlatform(80, level.Height - 240, 2),
+    CreatePlatform(180, level.Height - 320, 2),
+    CreatePlatform(180, level.Height - 400, 2),
+    CreatePlatform(0, level.Height - 480, 4)
   }
 end
 
