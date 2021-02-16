@@ -9,13 +9,7 @@ function Platform:init(x, y, amount)
 end
 
 function Platform:render()
-    if self.amount > 0 then
-        local i = 1
-        while i <= self.amount do
-           love.graphics.draw(images.Platform, self.x+(i*33), self.y)
-            i = i+1
-        end
-    else
-        love.graphics.draw(images.Platform, self.x, self.y)
+    for index = 0,self.amount - 1 do
+       love.graphics.draw(images.Platform, self.x + (index * 33), self.y)
     end
 end
