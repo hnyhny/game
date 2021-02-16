@@ -1,11 +1,16 @@
 local enviroment = require "Config.enviroment"
 require "GameObjects.character"
 require "GameObjects.background"
+require "GameObjects.platform"
 local push = require "Libraries.push"
 local userInput = require "Input.userInput"
 local settings = require "Config.settings"
 local background = Background()
 local character = Character()
+
+-- Code um eine Testplattform anzulegen
+local levelSize = settings.Game.LevelSize
+local platform = Platform(levelSize.Width-120,levelSize.Height-20,2)
 
 function love.update(dt) -- deltaTime
   character:update(dt)
@@ -30,5 +35,6 @@ function love.draw()
   love.graphics.scale(settings.Game.LevelSize.Scale)
   background:render()
   character:render()
+  platform:render()
 love.graphics.pop()
 end

@@ -6,6 +6,7 @@ end
 
 local images = {
     Background = newImage("background.png"),
+    Platform = newImage("platform01.png"),
     Character = {
         Running = newImage("char_run.png"),
         Standing = newImage("char_stand.png")
