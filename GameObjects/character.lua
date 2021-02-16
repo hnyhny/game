@@ -1,7 +1,5 @@
 Class = require "Libraries.class"
 local settings = require "Config.settings"
-local userInput = require "Input.userInput"
-local gravity = require "Physics.gravity"
 local animations = require "Rendering.animations"
 local image = require "Rendering.image"
 local images = require "Resources.images"
@@ -12,18 +10,6 @@ local texture = {
    Running = animations.newAnimation(images.Character.Running, width, animationDuration),
    Standing = image.newImage(images.Character.Standing)
   }
-
-local levelSize = settings.Game.LevelSize
-
-local Borders = {
-  Left = 0.2 * width,
-  Right = levelSize.Width - 1.2 * width,
-  Bottom = levelSize.Height - 1.5 * width
-}
-local Start = {
-  X = (levelSize.Width - width) / 2,
-  Y = levelSize.Height
-}
 
 Character = Class {}
 function Character:init()
