@@ -27,79 +27,26 @@ local Start = {
 
 Character = Class {}
 function Character:init()
-  self.Position = {
-    X = Start.X,
-    Y = Start.Y
-  }
-  self.Velocity = {
-    X = 0,
-    Y = 0
-  }
+  self.yVelocity = 0
+  self. xVelocity = 0
 end
 
-function Character:render()
+function Character:render(x, y)
 
-  local isRunningRight = self.Velocity.X > 0
-  local isRunningLeft = self.Velocity.X < 0
-
+  local isRunningRight = self.xVelocity > 0
+  local isRunningLeft = self.xVelocity < 0
+  local xWithOffset = x - 8
+  local yWithOffset = y - 8
   if isRunningRight then
-    texture.Running:draw(self.Position)
+    texture.Running:draw(xWithOffset, yWithOffset)
   elseif isRunningLeft then
-    texture.Running:draw(self.Position, 0, -1, 1, texture.Running.width)
+    texture.Running:draw(xWithOffset, yWithOffset, 0, -1, 1, texture.Running.width)
   else
-    love.graphics.draw(images.Character.Standing, self.Position.X, self.Position.Y, 0)
+    love.graphics.draw(images.Character.Standing, xWithOffset, yWithOffset, 0)
   end
 end
-
-local jumpedOnce = false
-local characterConfig = settings.Game.Character
-local function updateYVelocityFromInput(yVelocity)
-  if userInput.isJump() and not jumpedOnce then
-    jumpedOnce = true
-    return -characterConfig.Jump
-  end
-  return yVelocity
-end
-
-local function moveY(y, yVelocity)
-  local newY = y + yVelocity
-
-  if newY > Borders.Bottom then
-    jumpedOnce = false
-    return Borders.Bottom
-  else
-    return newY
-  end
-end
-
-local function updateXVelocity()
-  if userInput.isMoveRight() then
-    return characterConfig.Movement
-  elseif userInput.isMoveLeft() then
-    return -characterConfig.Movement
-  end
-  return 0
-end
-
-local function moveX(x, xVelocity)
-  local newX = x + xVelocity
-  if newX < Borders.Left then
-    return Borders.Left
-  end
-
-  if newX > Borders.Right then
-    return Borders.Right
-  end
-
-  return newX
-end
-
-function Character:update(dt)
-  self.Velocity.Y = gravity.apply(self.Velocity.Y, dt)
-  self.Velocity.Y = updateYVelocityFromInput(self.Velocity.Y)
-  self.Position.Y = moveY(self.Position.Y, self.Velocity.Y)
-
-  self.Velocity.X = updateXVelocity()
-  self.Position.X = moveX(self.Position.X, self.Velocity.X)
+function Character:update(dt, xVelocity, yVelocity)
+  self.xVelocity = xVelocity
+  self.yVelocity = yVelocity
   texture.Running:UpdateCurrentTime(dt)
 end

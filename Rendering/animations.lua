@@ -21,9 +21,9 @@ function animations.newAnimation(image, width, duration)
       end
     end
 
-    function animation:draw(position, r, sx, sy, ox, oy)
+    function animation:draw(x, y, r, sx, sy, ox, oy)
        local spriteNum = math.floor(self.currentTime / self.duration * #self.quads)
-        love.graphics.draw(self.spriteSheet, self.quads[spriteNum], position.X, position.Y, r, sx, sy, ox, oy)
+        love.graphics.draw(self.spriteSheet, self.quads[spriteNum], x, y, r, sx, sy, ox, oy)
     end
     return animation
 end
