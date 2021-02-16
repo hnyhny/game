@@ -41,7 +41,11 @@ local function CreatePlatform(x, y, amount, collisionClass)
   return platform
 end
 local gamePlatforms = {}
+local seed = os.time()
 function love.load()
+  if(false) then
+  seed = tonumber(arg[0])
+  end
   enviroment.initialize()
   world = wf.newWorld(0, 0, true)
   world:setGravity(0, 2000)
@@ -56,6 +60,7 @@ function love.load()
 
   world:addCollisionClass("plat_wall")
   world:addCollisionClass("floor")
+  world:addCollisionClass("ground")
   world:addCollisionClass("plat_ceiling")
   world:addCollisionClass("win")
 
@@ -69,7 +74,7 @@ function love.load()
   wall_right:setType("static")
   lava:setType("static")
 
-  ground:setCollisionClass("floor")
+  ground:setCollisionClass("ground")
   wall_left:setCollisionClass("wall")
   wall_right:setCollisionClass("wall")
 
@@ -79,41 +84,17 @@ function love.load()
   wall_right:setFriction(0)
 
   gamePlatforms = {
-    CreatePlatform(level.Width - 130, level.Height - 85, 1),
+    CreatePlatform(50, level.Height - 85, 2),
     CreatePlatform(20, level.Height - 165, 1),
     CreatePlatform(80, level.Height - 230, 2),
     CreatePlatform(180, level.Height - 300, 2),
-    CreatePlatform(180, level.Height - 370, 2),
+    CreatePlatform(120, level.Height - 370, 2),
     CreatePlatform(0, level.Height - 450, 4),
     CreatePlatform(150, level.Height - 520, 1),
     CreatePlatform(0, level.Height - 590, 3),
     CreatePlatform(120, level.Height - 660, 2),
-    CreatePlatform(50, level.Height - 730, 3),
-    CreatePlatform(70, level.Height - 800, 4),
-    CreatePlatform(10, level.Height - 870, 2),
-    CreatePlatform(20, level.Height - 940, 1),
-    CreatePlatform(80, level.Height - 1010, 2),
-    CreatePlatform(180, level.Height - 1080, 2),
-    CreatePlatform(180, level.Height - 1150, 1),
-    CreatePlatform(0, level.Height - 1220, 4),
-    CreatePlatform(150, level.Height - 1290, 1),
-    CreatePlatform(0, level.Height - 1360, 3),
-    CreatePlatform(120, level.Height - 1430, 2),
-    CreatePlatform(50, level.Height - 1500, 3),
-    CreatePlatform(70, level.Height - 1570, 4),
-    CreatePlatform(10, level.Height - 1640, 2),
-    CreatePlatform(100, level.Height - 1710, 4)
   }
-end
-
-math.randomseed(os.time())
-local function CreateFivePlatforms(y)
-
-  table.insert(gamePlatforms, CreatePlatform(math.random(0, 220), y - 70, math.random(1,4)))
-  table.insert(gamePlatforms, CreatePlatform(math.random(0, 220), y - 140, math.random(1,4)))
-  table.insert(gamePlatforms, CreatePlatform(math.random(0, 220), y - 210, math.random(1,4)))
-  table.insert(gamePlatforms, CreatePlatform(math.random(0, 220), y - 280, math.random(1,4)))
-  table.insert(gamePlatforms, CreatePlatform(math.random(0, 220), y - 350, math.random(1,4)))
+  playerBox:setLinearVelocity(0, 0)
 end
 
 local jumpedOnce = false
@@ -121,9 +102,34 @@ local isInAir = false
 local won = false
 local dead = false
 local movement = 0
+local worldspeed = 100
+
+math.randomseed(seed)
+local function CreatePlatformAt()
+  local randomX = math.random(2, 17) * 10
+  local randomElements = 2
+  local lastElement = gamePlatforms[#gamePlatforms]
+  local newMaxX = (randomX + (randomElements * 32))
+  local oldMaxX = (lastElement.x + (32 * lastElement.amount))
+  while  (math.abs(newMaxX - oldMaxX ) > 100)
+  or (math.abs(randomX - lastElement.x ) > 100)
+  or (lastElement.x >= randomX and oldMaxX <= newMaxX)  
+  or (newMaxX > 200)
+  do     
+     randomX = math.random(2, 18) * 10
+     randomElements = math.random(1,4)
+     newMaxX = (randomX + randomElements * 32) 
+     oldMaxX = (lastElement.x + 32 * lastElement.amount)
+  end
+  table.insert(gamePlatforms, CreatePlatform(randomX, lastElement.y - 70, randomElements))
+  if #gamePlatforms % 10 == 0 then
+    worldspeed = worldspeed + 5
+  end
+end
+
 function love.update(dt)
   if jumpedOnce and not won and not dead then
-    movement = -85 * dt
+    movement = -worldspeed * dt
     world:translateOrigin(0, movement)
     wall_left:setY(wall_left:getY() + movement)
     wall_right:setY(wall_right:getY() + movement)
@@ -150,12 +156,12 @@ function love.update(dt)
   end
 
   if userInput.isJump() and not isInAir then
-    jumpedOnce = true
     playerBox:applyLinearImpulse(0, -300)
     isInAir = true
   end
 
   if playerBox:enter("floor") then
+    jumpedOnce = true
     local x, y = playerBox:getLinearVelocity()
     playerBox:setLinearVelocity(x, 0)
     isInAir = false
@@ -164,12 +170,15 @@ function love.update(dt)
   if playerBox:enter("win") then
     won = true
   end
-
-  if playerBox:enter("lava") then
+  if playerBox:enter("ground") and not jumpedOnce then
+    local x, y = playerBox:getLinearVelocity()
+    playerBox:setLinearVelocity(x, 0)
+    isInAir = false  end
+  if playerBox:enter("ground") and jumpedOnce then
     dead = true
   end
   if (playerBox:getY() - gamePlatforms[#gamePlatforms].y <= 280) then
-    CreateFivePlatforms(gamePlatforms[#gamePlatforms].y)
+    CreatePlatformAt()
   end
   world:update(dt)
 end
@@ -185,9 +194,11 @@ function love.draw()
     end
     value:render()
   end
-  lavaImage:render(0, lava:getY() - 5)
-  background:render()
-
+  background:render()  
+  if jumpedOnce then
+    lavaImage:render(0, ground:getY() - 32)
+  end
+  love.graphics.print("Seed: ".. seed, 10, 10, 0, 1, 1)
   -- world:draw()
   if won then
     love.graphics.print(
@@ -202,23 +213,21 @@ function love.draw()
   if dead then
     love.graphics.print(
       "GAME OVER:",
-      settings.Game.LevelSize.Width / 2 - 100,
+      settings.Game.LevelSize.Width / 2 - 20,
       settings.Game.LevelSize.Height / 2 - 30,
       0,
-      2,
-      2
+      1,
+      1
     )
     for index, value in ipairs(gamePlatforms) do
-      if math.abs(lava:getY() - value.y) <= 70 then
         love.graphics.print(
-          index .. " Pts",
-          settings.Game.LevelSize.Width / 2 - 100,
+          #gamePlatforms .. " Pts",
+          settings.Game.LevelSize.Width / 2 - 20,
           settings.Game.LevelSize.Height / 2 + 10,
           0,
-          2,
-          2
+          1,
+          1
         )
-      end
     end
   end
   love.graphics.pop()
