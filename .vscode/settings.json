@@ -3,7 +3,8 @@
         "push",
         "love",
         "class_commons",
-        "unpack"
+        "unpack",
+        "settings"
     ],
     "Lua.diagnostics.disable": [
         "lowercase-global"
