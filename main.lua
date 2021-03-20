@@ -11,6 +11,8 @@ local background = Background()
 local character = Character()
 local lavaImage = Lava()
 local level = settings.Game.LevelSize
+local levelData = require "Level.thefloorbecomeslavatestlevel"
+local leveltilesCoordinates = levelData.layers.data
 
 local function CreatePlatform(x, y, amount, collisionClass)
   collisionClass = collisionClass or "floor"
@@ -41,6 +43,30 @@ local function CreatePlatform(x, y, amount, collisionClass)
   return platform
 end
 local gamePlatforms = {}
+
+local function tablelength(T)
+  local count = 0
+  for _ in T do count = count + 1 end
+  return count
+end
+
+local function loadPlattformsFromTable(levelTable)
+
+  local maxIndex = tablelength(levelTable)
+  local xCoordinate = level.Height
+  local yCoordinate = 0
+  for currentIndex = 0,maxIndex do
+      if levelTable[currentIndex] == 2 then
+        gamePlatforms[currentIndex] = CreatePlatform(xCoordinate,yCoordinate,1,"plat_ceiling")
+      end
+      if yCoordinate == level.Width then
+        yCoordinate = 0
+      else yCoordinate = yCoordinate + 1
+      end
+  end
+  return gamePlatforms
+end
+
 local seed = os.time()
 function love.load()
   if(false) then
@@ -83,7 +109,7 @@ function love.load()
   wall_left:setFriction(0)
   wall_right:setFriction(0)
 
-  gamePlatforms = {
+  --[[gamePlatforms = {
     CreatePlatform(50, level.Height - 85, 2),
     CreatePlatform(20, level.Height - 165, 1),
     CreatePlatform(80, level.Height - 230, 2),
@@ -93,7 +119,9 @@ function love.load()
     CreatePlatform(150, level.Height - 520, 1),
     CreatePlatform(0, level.Height - 590, 3),
     CreatePlatform(120, level.Height - 660, 2),
-  }
+  }]]
+  
+  gamePlatforms = loadPlattformsFromTable(leveltilesCoordinates)
   playerBox:setLinearVelocity(0, 0)
 end
 
