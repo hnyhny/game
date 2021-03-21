@@ -12,7 +12,7 @@ local character = Character()
 local lavaImage = Lava()
 local level = settings.Game.LevelSize
 local levelData = require "Level.thefloorbecomeslavatestlevel"
-local leveltilesCoordinates = levelData.layers.data
+local leveltilesCoordinates = levelData.layers[1].data
 
 local function CreatePlatform(x, y, amount, collisionClass)
   collisionClass = collisionClass or "floor"
@@ -45,25 +45,34 @@ end
 local gamePlatforms = {}
 
 local function tablelength(T)
-  local count = 0
-  for _ in T do count = count + 1 end
-  return count
+  local counter = 0
+  for k in pairs(T) do counter = counter +1 end
+  return counter
 end
 
 local function loadPlattformsFromTable(levelTable)
 
   local maxIndex = tablelength(levelTable)
-  local xCoordinate = level.Height
+  print(maxIndex)
+  local xCoordinate = 6
   local yCoordinate = 0
+  local plattformIndex = 0
+  local count = 0
   for currentIndex = 0,maxIndex do
       if levelTable[currentIndex] == 2 then
-        gamePlatforms[currentIndex] = CreatePlatform(xCoordinate,yCoordinate,1,"plat_ceiling")
+        print("Setze Plattform an ",xCoordinate,",",yCoordinate)
+        gamePlatforms[plattformIndex] = CreatePlatform(xCoordinate,yCoordinate,1,"plat_ceiling")
+        plattformIndex = plattformIndex +1
+        count = count + 1
       end
-      if yCoordinate == level.Width then
-        yCoordinate = 0
-      else yCoordinate = yCoordinate + 1
+
+      xCoordinate = xCoordinate + 6
+      if xCoordinate >= level.Width - 6 then
+        xCoordinate = 6
+        yCoordinate = yCoordinate + 6
       end
   end
+  print(count)
   return gamePlatforms
 end
 
