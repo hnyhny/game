@@ -55,18 +55,16 @@ local function loadPlattformsFromTable(levelTable)
   local maxIndex = tablelength(levelTable)
   local plattformIndex = 1
   for currentIndex = 1,maxIndex do
-    if((currentIndex % 40 >= 2) and (currentIndex % 40 <= 31)) then
       if levelTable[currentIndex] == 2 then
-        --[[print(currentIndex)
-        print(currentIndex % 40)
-        print(math.floor(currentIndex / 40))]]
-        local x = currentIndex % 40
-        local y = math.floor(currentIndex / 40)
+        --print(currentIndex)
+        --print(currentIndex % 32)
+        --print(math.floor(currentIndex / 32))
+        local x = currentIndex % 32
+        local y = math.floor(currentIndex / 32)
         --print("Setze Plattform an ",x,",",y)
         gamePlatforms[plattformIndex] = CreatePlatform(((x-1)*8) , ((y)*8),1)
         plattformIndex = plattformIndex +1
       end
-    end
   end
   return gamePlatforms
 end
@@ -210,7 +208,7 @@ function love.update(dt)
     dead = true
   end
   if (playerBox:getY() - gamePlatforms[#gamePlatforms].y <= 280) then
-    CreatePlatformAt()
+    --CreatePlatformAt()
   end
   world:update(dt)
 end
