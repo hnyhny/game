@@ -16,8 +16,8 @@ local leveltilesCoordinates = levelData.layers[1].data
 
 local function CreatePlatform(x, y, amount, collisionClass)
   collisionClass = collisionClass or "floor"
-  local height = 4
-  local width = 32 * amount
+  local height = 8
+  local width = 8 * amount
   local platformTop = world:newRectangleCollider(x + 1, y, width - 1, height)
   platformTop:setType("static")
   platformTop:setCollisionClass(collisionClass)
@@ -38,7 +38,7 @@ local function CreatePlatform(x, y, amount, collisionClass)
   local platform = Platform()
   platform.x = x
   platform.y = y
-  platform.amount = math.floor(width / 32)
+  platform.amount = math.floor(width / 8)
 
   return platform
 end
@@ -53,26 +53,21 @@ end
 local function loadPlattformsFromTable(levelTable)
 
   local maxIndex = tablelength(levelTable)
-  print(maxIndex)
-  local xCoordinate = 6
-  local yCoordinate = 0
-  local plattformIndex = 0
-  local count = 0
-  for currentIndex = 0,maxIndex do
+  local plattformIndex = 1
+  for currentIndex = 1,maxIndex do
+    if((currentIndex % 40 >= 2) and (currentIndex % 40 <= 31)) then
       if levelTable[currentIndex] == 2 then
-        print("Setze Plattform an ",xCoordinate,",",yCoordinate)
-        gamePlatforms[plattformIndex] = CreatePlatform(xCoordinate,yCoordinate,1,"plat_ceiling")
+        --[[print(currentIndex)
+        print(currentIndex % 40)
+        print(math.floor(currentIndex / 40))]]
+        local x = currentIndex % 40
+        local y = math.floor(currentIndex / 40)
+        --print("Setze Plattform an ",x,",",y)
+        gamePlatforms[plattformIndex] = CreatePlatform(((x-1)*8) , ((y)*8),1)
         plattformIndex = plattformIndex +1
-        count = count + 1
       end
-
-      xCoordinate = xCoordinate + 6
-      if xCoordinate >= level.Width - 6 then
-        xCoordinate = 6
-        yCoordinate = yCoordinate + 6
-      end
+    end
   end
-  print(count)
   return gamePlatforms
 end
 

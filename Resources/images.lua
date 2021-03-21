@@ -6,7 +6,7 @@ end
 
 local images = {
     Background = newImage("background.png"),
-    Platform = newImage("platform01.png"),
+    Platform = newImage("wall_tilesetsimple.png"),
     Lava = newImage("lava.png"),
     Character = {
         Running = newImage("char_run.png"),
